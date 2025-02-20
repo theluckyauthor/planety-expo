@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, TouchableOpacity } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -6,8 +6,19 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useSuperwall } from '@/hooks/useSuperwall';
+import { SUPERWALL_TRIGGERS } from '@/config/superwall';
+import { Colors } from '@/constants/Colors';
 
 export default function TabTwoScreen() {
+  const { isSubscribed, isLoading, showPaywall } = useSuperwall();
+
+  const handlePremiumFeature = () => {
+    if (!isSubscribed && !isLoading) {
+      showPaywall(SUPERWALL_TRIGGERS.FEATURE_UNLOCK);
+    }
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -91,6 +102,16 @@ export default function TabTwoScreen() {
           ),
         })}
       </Collapsible>
+      <Collapsible title="Premium Features">
+        <ThemedText>
+          Tap to explore premium features {isSubscribed ? '(Subscribed)' : '(Upgrade Required)'}
+        </ThemedText>
+        {!isSubscribed && (
+          <TouchableOpacity onPress={handlePremiumFeature} style={styles.upgradeButton}>
+            <ThemedText type="defaultSemiBold">Upgrade Now</ThemedText>
+          </TouchableOpacity>
+        )}
+      </Collapsible>
     </ParallaxScrollView>
   );
 }
@@ -105,5 +126,12 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     gap: 8,
+  },
+  upgradeButton: {
+    marginTop: 12,
+    padding: 8,
+    backgroundColor: Colors.light.tint,
+    borderRadius: 8,
+    alignItems: 'center',
   },
 });

@@ -3,10 +3,15 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "@/*": ["./*"],
+      "@components/*": ["./components/*"],
+      "@utils/*": ["./utils/*"],
+      "@constants/*": ["./constants/*"],
+      "@types/*": ["./types/*"]
+    },
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "types": ["node"]
   },
   "include": [
     "**/*.ts",
