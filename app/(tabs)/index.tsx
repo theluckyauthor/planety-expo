@@ -1,12 +1,29 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { PaywallButton } from '@/components/PaywallButton';
+import { useSuperwall } from '@/hooks/useSuperwall';
+import { useOnboarding } from '@/contexts/OnboardingContext';
+import { useRouter } from 'expo-router';
+import { SUPERWALL_TRIGGERS } from '@/config/superwall';
 
 export default function HomeScreen() {
+  const { setIsOnboarded } = useOnboarding();
+  const { showPaywall } = useSuperwall();
+  const router = useRouter();
+
+  const handleRestartOnboarding = async () => {
+    await setIsOnboarded(false);
+    router.push('/onboarding');
+  };
+
+  const handleShowPaywall = () => {
+    showPaywall(SUPERWALL_TRIGGERS.ONBOARDING);
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -19,7 +36,6 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
-        <PaywallButton />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
@@ -52,6 +68,20 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
+      
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleShowPaywall}>
+          <ThemedText type="defaultSemiBold" style={styles.buttonText}>
+            Show Paywall
+          </ThemedText>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.button, styles.secondaryButton]} onPress={handleRestartOnboarding}>
+          <ThemedText type="defaultSemiBold" style={styles.secondaryButtonText}>
+            Restart Onboarding
+          </ThemedText>
+        </TouchableOpacity>
+      </View>
     </ParallaxScrollView>
   );
 }
@@ -72,5 +102,24 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
+  },
+  buttonContainer: {
+    marginTop: 24,
+    gap: 12,
+  },
+  button: {
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    backgroundColor: '#0A7EA4',
+  },
+  buttonText: {
+    color: 'white',
+  },
+  secondaryButton: {
+    backgroundColor: '#0A7EA420',
+  },
+  secondaryButtonText: {
+    color: '#0A7EA4',
   },
 });
