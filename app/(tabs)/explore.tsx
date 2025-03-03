@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -6,16 +6,23 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useSuperwall } from '@/hooks/useSuperwall';
-import { SUPERWALL_TRIGGERS } from '@/config/superwall';
+import { useSubscription } from '@/hooks/useSubscription';
 import { Colors } from '@/constants/Colors';
 
 export default function TabTwoScreen() {
-  const { isSubscribed, isLoading, showPaywall } = useSuperwall();
+  const { isSubscribed, isLoading, packages, handlePurchase } = useSubscription();
 
-  const handlePremiumFeature = () => {
-    if (!isSubscribed && !isLoading) {
-      showPaywall(SUPERWALL_TRIGGERS.FEATURE_UNLOCK);
+  const handlePremiumFeature = async () => {
+    if (packages.length > 0) {
+      // Get the first available package
+      const result = await handlePurchase(packages[0]);
+      if (result) {
+        console.log('Purchase successful!');
+      } else {
+        console.log('Purchase failed or was cancelled');
+      }
+    } else {
+      console.log('No packages available');
     }
   };
 
@@ -104,9 +111,13 @@ export default function TabTwoScreen() {
       </Collapsible>
       <Collapsible title="Premium Features">
         <ThemedText>
-          Tap to explore premium features {isSubscribed ? '(Subscribed)' : '(Upgrade Required)'}
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            `Tap to explore premium features ${isSubscribed ? '(Subscribed)' : '(Upgrade Required)'}`
+          )}
         </ThemedText>
-        {!isSubscribed && (
+        {!isSubscribed && !isLoading && (
           <TouchableOpacity onPress={handlePremiumFeature} style={styles.upgradeButton}>
             <ThemedText type="defaultSemiBold">Upgrade Now</ThemedText>
           </TouchableOpacity>

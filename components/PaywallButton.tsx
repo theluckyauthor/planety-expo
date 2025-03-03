@@ -1,28 +1,29 @@
-import { StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as React from 'react';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { useSubscription } from '@/hooks/useSubscription';
 import { ThemedText } from './ThemedText';
-import { useSuperwall } from '@/hooks/useSuperwall';
-import { SUPERWALL_TRIGGERS } from '@/config/superwall';
 
 export function PaywallButton() {
-  const { showPaywall } = useSuperwall();
+  const { packages, handlePurchase } = useSubscription();
 
-  const handlePress = () => {
-    showPaywall(SUPERWALL_TRIGGERS.ONBOARDING);
+  const handlePress = async () => {
+    if (packages.length > 0) {
+      await handlePurchase(packages[0]);
+    }
   };
 
   return (
-    <TouchableOpacity style={styles.button} onPress={handlePress}>
-      <ThemedText type="defaultSemiBold">Show Paywall</ThemedText>
+    <TouchableOpacity onPress={handlePress} style={styles.button}>
+      <ThemedText type="defaultSemiBold">Upgrade to Premium</ThemedText>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    padding: 16,
+    padding: 12,
     borderRadius: 8,
-    backgroundColor: '#0a7ea4',
+    backgroundColor: '#007AFF',
     alignItems: 'center',
   },
 });
