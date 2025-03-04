@@ -1,38 +1,237 @@
-// React Native Expo .cursorrules
+// Planety - React Native Expo .cursorrules
+// This file defines coding standards and best practices for the Planety friendship management app
 
-// React Native Expo best practices
+// Required file structure (Updated for Expo Router)
+required_folder_structure:
+  - app/              // Main app directory for Expo Router
+    - (tabs)/        // Tab-based navigation routes
+    - onboarding/    // Onboarding flow routes
+    - _layout.tsx    // Root layout configuration
+  - assets/          // For images, fonts, and other static assets
+  - components/      // Reusable UI components
+  - hooks/          // Custom React hooks
+  - utils/          // Helper functions and utilities
+  - constants/      // App-wide constants
+  - context/        // React Context providers
+  - services/       // API and external service integrations
+  - types/          // TypeScript type definitions
+  - config/         // Configuration files
+  - scripts/        // Build and utility scripts
 
-const reactNativeExpoBestPractices = [
-  "Use functional components with hooks",
-  "Utilize Expo SDK features and APIs",
-  "Implement proper navigation using React Navigation",
-  "Use Expo's asset system for images and fonts",
-  "Implement proper error handling and crash reporting",
-  "Utilize Expo's push notification system",
-];
+// File naming conventions (Updated for Expo Router)
+naming_conventions:
+  - app routes: [name].tsx or page.tsx
+  - layouts: _layout.tsx
+  - not found: +not-found.tsx
+  - components: PascalCase.tsx
+  - utils: camelCase.ts
+  - hooks: use[Name].ts
+  - types: [Name].types.ts
+  - context: [Name]Context.tsx
+  - group routes: (groupName)/
+  - dynamic routes: [param].tsx
 
-// Folder structure
+// Required imports and configurations
+required_imports:
+  - import { StyleSheet } from 'react-native'
+  - import { useTheme } from '../context/ThemeContext'
+  - import { COLORS, SPACING } from '../constants/theme'
+  - import { Link, Stack, Tabs } from 'expo-router'
 
-const folderStructure = `
-assets/
-src/
-  components/
-  screens/
-  navigation/
-  hooks/
-  utils/
-App.js
-app.json
-`;
+// Expo Router specific rules
+router_rules:
+  - Use file-based routing convention
+  - Group related routes in directories
+  - Implement proper layouts with _layout.tsx
+  - Use proper navigation patterns (Link, Stack, Tabs)
+  - Handle deep linking properly
+  - Implement proper error boundaries with +error.tsx
+  - Use proper loading states with loading.tsx
 
-// Additional instructions
+// Component rules
+component_rules:
+  - Use functional components with hooks
+  - Implement proper TypeScript types
+  - Use StyleSheet.create for styles
+  - Implement proper error boundaries
+  - Use memo for performance optimization when needed
+  - Keep components focused and single-responsibility
+  - Implement proper loading and error states
 
-const additionalInstructions = `
-1. Use TypeScript for type safety
-2. Implement proper styling using StyleSheet
-3. Utilize Expo's vector icons
-4. Use Expo's secure store for sensitive data
-5. Implement proper offline support
-6. Follow React Native best practices for performance
-7. Use Expo's OTA updates for quick deployments
-`;
+// Styling rules
+styling_rules:
+  - Use StyleSheet.create for all styles
+  - Follow theme context for colors and spacing
+  - Implement proper dark/light mode support
+  - Use responsive dimensions
+  - Follow accessibility guidelines
+  - Use constants for common values
+  - Implement proper layout for different screen sizes
+
+// Animation rules
+animation_rules:
+  - Use React Native Reanimated for complex animations
+  - Implement smooth transitions
+  - Keep animations performant
+  - Use shared element transitions where appropriate
+  - Implement proper loading states with animations
+
+// State management
+state_management:
+  - Use React Context for global state
+  - Implement proper data persistence
+  - Use proper error handling
+  - Implement proper loading states
+  - Use proper TypeScript types for state
+
+// Performance rules
+performance_rules:
+  - Implement proper list virtualization
+  - Use proper image optimization
+  - Implement proper caching
+  - Use proper memory management
+  - Implement proper error handling
+  - Use proper TypeScript types
+
+// Security rules
+security_rules:
+  - Use Expo SecureStore for sensitive data
+  - Implement proper authentication
+  - Use proper data encryption
+  - Implement proper error handling
+  - Use proper TypeScript types
+
+// Testing rules (Updated)
+testing_rules:
+  - Write unit tests for utilities
+  - Write integration tests for components
+  - Test routing and navigation flows
+  - Implement proper error handling
+  - Use proper TypeScript types
+  - Test both success and error cases
+  - Test deep linking functionality
+
+// Documentation rules
+documentation_rules:
+  - Document all components
+  - Document all utilities
+  - Document all types
+  - Use proper JSDoc comments
+  - Keep documentation up to date
+
+// Specific feature requirements
+feature_requirements:
+  - Implement proper friend categorization system
+  - Use proper animation for planet transitions
+  - Implement proper notification system
+  - Use proper data persistence
+  - Implement proper error handling
+  - Use proper TypeScript types
+
+// Environment configuration (Updated)
+environment_rules:
+  - Use .env and .env.example for environment variables
+  - Follow EAS build configuration in eas.json
+  - Implement proper error handling
+  - Use proper TypeScript types
+  - Keep development and production configs separate
+  - Use proper expo-constants for environment detection
+
+// Build and deployment rules (New section)
+build_rules:
+  - Follow EAS build configuration
+  - Use proper app.json configuration
+  - Implement proper versioning
+  - Use proper expo-updates configuration
+  - Follow proper development client setup
+  - Implement proper splash screen and icon assets
+
+// Accessibility rules
+accessibility_rules:
+  - Use proper accessibility labels
+  - Implement proper color contrast
+  - Use proper font scaling
+  - Implement proper voice over support
+  - Use proper TypeScript types
+
+// Git commit rules
+git_commit_rules:
+  - Use conventional commits
+  - Keep commits focused
+  - Write proper commit messages
+  - Reference issues in commits
+  - Use proper branch naming
+
+// Code quality rules
+code_quality_rules:
+  - Use ESLint
+  - Use Prettier
+  - Follow TypeScript best practices
+  - Keep code DRY
+  - Use proper error handling
+  - Implement proper logging
+
+// Error handling rules
+error_handling_rules:
+  - Use proper try/catch blocks
+  - Implement proper error boundaries
+  - Use proper error logging
+  - Implement proper user feedback
+  - Use proper TypeScript types
+
+// Specific app theme requirements
+theme_requirements:
+  - Follow space theme guidelines
+  - Use proper color palette
+  - Implement proper dark/light mode
+  - Use proper typography
+  - Implement proper animations
+  - Use proper spacing
+
+// Project Context Rules (New section)
+project_context_rules:
+  // Core Purpose
+  - Remember the app's mission: Strengthening meaningful friendships through structured engagement
+  - Focus on solving friendship fade after life transitions
+  - Prioritize meaningful connections over superficial interactions
+  
+  // Core Features Context
+  - Friend Planet System:
+    - Implement planet-based categorization (Earth=best friend, Saturn=casual, Neptune=long-distance)
+    - Support dynamic category adjustments
+    - Include onboarding quiz for initial categorization
+  
+  // User Experience Goals
+  - Keep interactions gentle and non-overwhelming
+  - Maintain whimsical and friendly tone throughout
+  - Balance gamification with meaningful engagement
+  
+  // Visual and Design Context
+  - Follow space theme consistently:
+    - Color scheme: White & carrot orange (logo), space purples and deep blues (UI)
+    - Typography: Mix of legible sans-serif and semi-handwritten fonts
+    - UI: Soft, rounded icons with subtle gradients
+  
+  // Technical Context
+  - Remember core tech stack requirements:
+    - React Native + Expo
+    - Firebase backend
+    - SQLite with Drizzle
+    - Superwall integration
+  
+  // Business Context
+  - Support freemium model implementation
+  - Enable premium feature segregation
+  - Track towards 30-day challenge goals:
+    - 1,000 downloads target
+    - $100 revenue goal
+  
+  // Privacy Context
+  - Maintain privacy-first approach
+  - Implement secure cloud sync
+  - Provide data export/import options
+
+  // Performance Context
+  - Optimize animations for smooth parallax effects
+  - Ensure responsive microinteractions
+  - Maintain cozy, whimsical UX without sacrificing performance

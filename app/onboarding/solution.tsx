@@ -1,70 +1,95 @@
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+
+const { width } = Dimensions.get('window');
+
+const solutions = [
+  {
+    icon: 'planet',
+    title: 'Friend Planets',
+    description: 'Organize friends into meaningful orbits based on your relationship dynamics',
+  },
+  {
+    icon: 'notifications',
+    title: 'Smart Check-ins',
+    description: 'Get gentle reminders to reach out at the right moments',
+  },
+  {
+    icon: 'analytics',
+    title: 'Relationship Insights',
+    description: 'Track the health and growth of your friendships over time',
+  },
+];
 
 export default function SolutionScreen() {
   const router = useRouter();
 
   const handleNext = () => {
-    router.push('/onboarding/features');
+    router.push('/onboarding/final');
   };
 
   return (
     <ThemedView style={styles.container}>
+      <StatusBar style="auto" />
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView 
-          style={styles.scroll} 
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+        <View style={styles.content}>
           <View style={styles.header}>
-            <MaterialCommunityIcons name="lightbulb-on" size={48} color="#0A7EA4" />
-            <ThemedText type="title" style={styles.title}>
-              Introducing a Better Way
-            </ThemedText>
+            <Animated.View 
+              entering={FadeInDown.delay(300).springify()}
+              style={styles.iconContainer}
+            >
+              <Ionicons name="bulb" size={64} color="#6C63FF" />
+            </Animated.View>
+            <Animated.View entering={FadeInDown.delay(500).springify()}>
+              <ThemedText type="title" style={styles.title}>
+                Our Solution
+              </ThemedText>
+            </Animated.View>
           </View>
 
-          <View style={styles.mainFeature}>
-            <ThemedText type="defaultSemiBold" style={styles.mainTitle}>
-              Your App's Core Value
-            </ThemedText>
-            <ThemedText style={styles.mainDescription}>
-              One clear, powerful sentence that explains exactly how you solve the user's problem.
-            </ThemedText>
+          <View style={styles.solutions}>
+            {solutions.map((solution, index) => (
+              <Animated.View
+                key={solution.title}
+                entering={FadeInDown.delay(700 + (index * 200)).springify()}
+                style={styles.solutionCard}
+              >
+                <View style={styles.iconContainer}>
+                  <Ionicons name={solution.icon} size={32} color="#6C63FF" />
+                </View>
+                <View style={styles.solutionText}>
+                  <ThemedText type="defaultSemiBold" style={styles.solutionTitle}>
+                    {solution.title}
+                  </ThemedText>
+                  <ThemedText style={styles.solutionDescription}>
+                    {solution.description}
+                  </ThemedText>
+                </View>
+              </Animated.View>
+            ))}
           </View>
 
-          <View style={styles.benefits}>
-            <View style={styles.benefit}>
-              <MaterialCommunityIcons name="check-circle" size={24} color="#0A7EA4" />
-              <ThemedText style={styles.benefitText}>
-                Key benefit or feature that solves their pain
+          <Animated.View 
+            entering={FadeInDown.delay(1500).springify()}
+            style={styles.buttonContainer}
+          >
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={handleNext}
+            >
+              <ThemedText type="defaultSemiBold" style={styles.buttonText}>
+                Get Started
               </ThemedText>
-            </View>
-            <View style={styles.benefit}>
-              <MaterialCommunityIcons name="check-circle" size={24} color="#0A7EA4" />
-              <ThemedText style={styles.benefitText}>
-                Another important advantage of your solution
-              </ThemedText>
-            </View>
-            <View style={styles.benefit}>
-              <MaterialCommunityIcons name="check-circle" size={24} color="#0A7EA4" />
-              <ThemedText style={styles.benefitText}>
-                A third compelling reason to use your app
-              </ThemedText>
-            </View>
-          </View>
-        </ScrollView>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <ThemedText type="defaultSemiBold" style={styles.buttonText}>
-              Show Me How
-            </ThemedText>
-          </TouchableOpacity>
+              <Ionicons name="arrow-forward" size={24} color="white" />
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </SafeAreaView>
     </ThemedView>
@@ -78,64 +103,62 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  scroll: {
+  content: {
     flex: 1,
-  },
-  scrollContent: {
     paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 16,
-    gap: 24,
+    paddingVertical: 24,
+    justifyContent: 'space-between',
   },
   header: {
     alignItems: 'center',
-    gap: 16,
+    gap: 24,
+  },
+  iconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#E8E8FF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 32,
     textAlign: 'center',
   },
-  mainFeature: {
-    backgroundColor: '#0A7EA410',
-    padding: 24,
-    borderRadius: 20,
-    gap: 8,
+  solutions: {
+    gap: 16,
   },
-  mainTitle: {
-    fontSize: 22,
-    textAlign: 'center',
-  },
-  mainDescription: {
-    fontSize: 16,
-    opacity: 0.7,
-    textAlign: 'center',
-    lineHeight: 22,
-  },
-  benefits: {
-    gap: 12,
-  },
-  benefit: {
+  solutionCard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: '#0A7EA408',
-    padding: 16,
-    borderRadius: 12,
-  },
-  benefitText: {
-    flex: 1,
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  buttonContainer: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-  },
-  button: {
-    backgroundColor: '#0A7EA4',
+    backgroundColor: '#F5F5F5',
     padding: 20,
     borderRadius: 16,
     alignItems: 'center',
+    gap: 16,
+  },
+  solutionText: {
+    flex: 1,
+  },
+  solutionTitle: {
+    fontSize: 18,
+    marginBottom: 4,
+  },
+  solutionDescription: {
+    fontSize: 14,
+    opacity: 0.7,
+    lineHeight: 20,
+  },
+  buttonContainer: {
+    paddingHorizontal: 16,
+  },
+  button: {
+    backgroundColor: '#6C63FF',
+    padding: 20,
+    borderRadius: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
   },
   buttonText: {
     color: 'white',

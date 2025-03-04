@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -12,6 +12,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const { isFirstLaunch } = useOnboarding();
+  const segments = useSegments();
+  const router = useRouter();
 
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -27,25 +29,45 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  useEffect(() => {
+    if (!loaded) return;
+
+    // Check if we're not already in the onboarding flow
+    const inOnboarding = segments[0] === 'onboarding';
+
+    if (isFirstLaunch && !inOnboarding) {
+      // Redirect to onboarding if it's first launch
+      router.replace('/onboarding');
+    } else if (!isFirstLaunch && inOnboarding) {
+      // Redirect to main app if not first launch
+      router.replace('/(tabs)');
+    }
+  }, [loaded, isFirstLaunch, segments]);
+
   if (!loaded) {
     return null;
   }
 
   return (
     <ThemeProvider>
-      <Stack>
-        <Stack.Screen
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen 
+          name="onboarding" 
+          options={{
+            // Prevent going back to splash screen
+            gestureEnabled: false
+          }} 
+        />
+        <Stack.Screen 
           name="(tabs)"
-          options={{ headerShown: false }}
-          redirect={isFirstLaunch}
-        />
-        <Stack.Screen
-          name="onboarding/features"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="onboarding/final"
-          options={{ headerShown: false }}
+          options={{
+            // Prevent going back to onboarding
+            gestureEnabled: false
+          }}
         />
       </Stack>
     </ThemeProvider>

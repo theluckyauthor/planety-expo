@@ -1,17 +1,20 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+
+const { width } = Dimensions.get('window');
 
 export default function WelcomeScreen() {
   const router = useRouter();
 
   const handleNext = () => {
-    router.push('/onboarding/problem');
+    router.push('/onboarding/features');
   };
 
   return (
@@ -19,23 +22,41 @@ export default function WelcomeScreen() {
       <StatusBar style="auto" />
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
-          <View style={styles.main}>
-            <MaterialCommunityIcons name="star" size={64} color="#0A7EA4" />
-            <ThemedText type="title" style={styles.title}>
-              Your App Name
-            </ThemedText>
-            <View style={styles.subtitleContainer}>
-              <ThemedText style={styles.subtitle}>
-                A short, compelling tagline that captures your app's value
+          <Animated.View 
+            entering={FadeInUp.delay(300).springify()} 
+            style={styles.header}
+          >
+            <Ionicons name="planet" size={120} color="#6C63FF" />
+          </Animated.View>
+
+          <View style={styles.textContainer}>
+            <Animated.View entering={FadeInDown.delay(600).springify()}>
+              <ThemedText type="title" style={styles.title}>
+                Welcome to Planety
               </ThemedText>
-            </View>
+            </Animated.View>
+            
+            <Animated.View entering={FadeInDown.delay(800).springify()}>
+              <ThemedText style={styles.subtitle}>
+                Your personal space for meaningful friendships
+              </ThemedText>
+            </Animated.View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <ThemedText type="defaultSemiBold" style={styles.buttonText}>
-              Get Started
-            </ThemedText>
-          </TouchableOpacity>
+          <Animated.View 
+            entering={FadeInUp.delay(1000).springify()}
+            style={styles.buttonContainer}
+          >
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={handleNext}
+            >
+              <ThemedText type="defaultSemiBold" style={styles.buttonText}>
+                Start Your Journey
+              </ThemedText>
+              <Ionicons name="arrow-forward" size={24} color="white" />
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </SafeAreaView>
     </ThemedView>
@@ -55,31 +76,38 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 24,
   },
-  main: {
-    flex: 1,
+  header: {
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 24,
+    marginTop: 40,
+  },
+  textContainer: {
+    alignItems: 'center',
+    gap: 16,
   },
   title: {
-    fontSize: 36,
+    fontSize: 40,
     textAlign: 'center',
-    paddingHorizontal: 16,
-  },
-  subtitleContainer: {
-    paddingHorizontal: 32,
+    fontWeight: 'bold',
   },
   subtitle: {
     fontSize: 18,
     opacity: 0.7,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 26,
+    maxWidth: width * 0.8,
+  },
+  buttonContainer: {
+    paddingHorizontal: 16,
+    marginBottom: 20,
   },
   button: {
-    backgroundColor: '#0A7EA4',
+    backgroundColor: '#6C63FF',
     padding: 20,
     borderRadius: 16,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
   },
   buttonText: {
     color: 'white',
