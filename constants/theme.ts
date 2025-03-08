@@ -3,9 +3,19 @@ import { Dimensions } from 'react-native';
 export const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
 
 export const COLORS = {
-  // Primary Colors
+  primary: '#FF6B00', // Carrot orange from logo
   white: '#FFFFFF',
-  carrotOrange: '#F97316',
+  black: '#000000',
+  gray: {
+    100: '#F5F5F5',
+    200: '#E0E0E0',
+    300: '#CCCCCC',
+    400: '#999999',
+    500: '#666666',
+    600: '#333333',
+    700: '#1E1E1E',
+    800: '#121212',
+  },
   
   // Space Theme Colors
   spacePurple: {
@@ -37,11 +47,12 @@ export const COLORS = {
 };
 
 export const SPACING = {
-  xs: 8,
-  sm: 16,
-  md: 24,
-  lg: 32,
-  xl: 40,
+  xs: 4,
+  small: 8,
+  medium: 16,
+  large: 24,
+  xlarge: 32,
+  xxlarge: 48,
 };
 
 export const FONTS = {

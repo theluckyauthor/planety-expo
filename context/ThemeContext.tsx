@@ -1,22 +1,48 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
-type ThemeMode = 'light' | 'dark' | 'system';
+interface Theme {
+  primary: string;
+  text: string;
+  textSecondary: string;
+  textInverse: string;
+  background: string;
+  backgroundSecondary: string;
+  border: string;
+}
+
+const lightTheme: Theme = {
+  primary: '#FF6B00', // Carrot orange from logo
+  text: '#000000',
+  textSecondary: '#666666',
+  textInverse: '#FFFFFF',
+  background: '#FFFFFF',
+  backgroundSecondary: '#F5F5F5',
+  border: '#E0E0E0',
+};
+
+const darkTheme: Theme = {
+  primary: '#FF6B00',
+  text: '#FFFFFF',
+  textSecondary: '#A0A0A0',
+  textInverse: '#000000',
+  background: '#121212',
+  backgroundSecondary: '#1E1E1E',
+  border: '#333333',
+};
 
 interface ThemeContextType {
-  isDark: boolean;
-  themeMode: ThemeMode;
-  setThemeMode: (mode: ThemeMode) => void;
+  theme: Theme;
   toggleTheme: () => void;
+  isDark: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  isDark: false,
-  themeMode: 'system',
-  setThemeMode: () => {},
+  theme: lightTheme,
   toggleTheme: () => {},
+  isDark: false,
 });
 
 const THEME_MODE_KEY = '@theme_mode';
@@ -25,9 +51,9 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const systemColorScheme = useColorScheme();
-  const [themeMode, setThemeModeState] = useState<ThemeMode>('system');
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const colorScheme = useColorScheme();
+  const [isDark, setIsDark] = useState(colorScheme === 'dark');
 
   useEffect(() => {
     // Load saved theme mode
@@ -35,7 +61,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
       try {
         const savedMode = await SecureStore.getItemAsync(THEME_MODE_KEY);
         if (savedMode) {
-          setThemeModeState(savedMode as ThemeMode);
+          setIsDark(savedMode === 'dark');
         }
       } catch (error) {
         console.warn('Failed to load theme mode:', error);
@@ -45,34 +71,14 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     loadThemeMode();
   }, []);
 
-  const setThemeMode = async (mode: ThemeMode) => {
-    try {
-      await SecureStore.setItemAsync(THEME_MODE_KEY, mode);
-      setThemeModeState(mode);
-    } catch (error) {
-      console.warn('Failed to save theme mode:', error);
-    }
-  };
-
   const toggleTheme = () => {
-    const newMode = themeMode === 'light' ? 'dark' : 'light';
-    setThemeMode(newMode);
+    setIsDark(!isDark);
   };
 
-  const isDark = 
-    themeMode === 'system' 
-      ? systemColorScheme === 'dark'
-      : themeMode === 'dark';
+  const theme = isDark ? darkTheme : lightTheme;
 
   return (
-    <ThemeContext.Provider
-      value={{
-        isDark,
-        themeMode,
-        setThemeMode,
-        toggleTheme,
-      }}
-    >
+    <ThemeContext.Provider value={{ theme, toggleTheme, isDark }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -50,24 +50,18 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen 
-          name="onboarding" 
-          options={{
-            // Prevent going back to splash screen
-            gestureEnabled: false
-          }} 
-        />
-        <Stack.Screen 
+      <Stack>
+        <Stack.Screen
           name="(tabs)"
-          options={{
-            // Prevent going back to onboarding
-            gestureEnabled: false
-          }}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="onboarding"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="auth"
+          options={{ headerShown: false }}
         />
       </Stack>
     </ThemeProvider>
